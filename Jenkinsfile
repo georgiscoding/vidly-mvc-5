@@ -14,6 +14,7 @@ pipeline {
       steps {
         echo 'Building with gradle'
         withGradle() {
+          sh 'chmod +x ./gradlew'
           sh './gradlew -v' 
         }
       }
