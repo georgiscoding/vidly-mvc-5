@@ -2,19 +2,14 @@ pipeline {
  agent any
  
   stages {
-    stage("build") {
+    stage("run frontend") {
       steps {
-        echo 'Building the app soon...'
+        echo 'Building with yarn'
       }
     }
-    stage("test") {
+    stage("run backend") {
       steps {
-        echo 'Testing the app...'
-      }
-    }
-    stage("deploy") {
-      steps {
-        echo 'Deploying the app...'
+        echo 'Building with gradle'
       }
     }
   }
