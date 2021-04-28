@@ -8,7 +8,8 @@ pipeline {
       steps {
         echo 'Building with yarn'
         nodejs('Node-15.14.0') {
-          sh 'yarn install'      
+          sh 'yarn install'
+          sh 'npm install'
         }
       }
     }
