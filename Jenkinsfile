@@ -1,6 +1,8 @@
 pipeline {
  agent any
- 
+ tools {
+  gradle 'Gradle'
+ }
   stages {
     stage("run frontend") {
       steps {
@@ -13,10 +15,7 @@ pipeline {
     stage("run backend") {
       steps {
         echo 'Building with gradle'
-        withGradle() {
-          sh 'chmod +x ./gradlew'
-          sh './gradlew -v' 
-        }
+        sh './gradlew -v' 
       }
     }
   }
