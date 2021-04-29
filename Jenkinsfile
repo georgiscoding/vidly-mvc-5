@@ -8,7 +8,7 @@ pipeline {
     stage("build") {
       when {
         expressions {
-          BRANCH_NAME == 'dev' && CODE_CHANGES == true
+          env.BRANCH_NAME == 'dev' && CODE_CHANGES == true
         }
       }
       steps {
@@ -30,7 +30,7 @@ pipeline {
       when {
         expressions {
           //env.BRANCH_NAME or
-          BRANCH_NAME == 'feature' || BRANCH_NAME == 'master'
+          env.BRANCH_NAME == 'feature' || BRANCH_NAME == 'master'
 
         }
       }
