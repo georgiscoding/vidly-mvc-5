@@ -1,18 +1,27 @@
 CODE_CHANGES = true
 pipeline {
  agent any
- tools {
-  gradle 'Gradle'
+
+ environment {
+   NEW_VERSION = '1.4.0'
+   //Need the -Credentials Plugin and Credentials Binding plugin for this in Jenkins
+   SERVER_CREDENTIALS = credentials('server-credentials')
  }
+
+//  tools {
+//   gradle 'Gradle'
+//  }
   stages {
     stage("build") {
       when {
         expression {
-          BRANCH_NAME == 'dev' && CODE_CHANGES == true
+          BRANCH_NAME == 'feature' && CODE_CHANGES == true
         }
       }
       steps {
         echo 'Building application'
+        // Need to use double quoutes since we are using a variable inside the string
+        echo "Building version ${NEW_VERSION}"
       }
     }
 
@@ -26,6 +35,7 @@ pipeline {
         }
       }
     }
+
     stage("test mixed up build with gradle") {
       when {
         expression {
@@ -36,12 +46,28 @@ pipeline {
       }
       steps {
         echo 'Testing the application'
+        // Without wrapper since we included it in tools at the beginning.
         // echo 'Building with gradle'
         // sh 'ls'
         // sh 'pwd'
         // sh './gradlew -v' 
       }
     }
+
+    stage("deploy") {
+      steps {
+        echo 'deploying the application...'
+        echo "Deploying using the credentials : ${SERVER_CREDENTIALS}"
+        // With wrapper it looks like this.
+        withCredentials([
+          // usernamepassword cause thats the type.. server-credentials is the ID
+          usernamepassword(credentials: 'server-credentials', usernameVariable: USER, passwordVariable: PASSWORD)
+        ]) {
+            sh "some script ${USER} ${PASSWORD}"
+        }
+      }
+    }
+
   }
   post {
     always {
