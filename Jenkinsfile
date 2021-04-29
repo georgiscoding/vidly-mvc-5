@@ -7,8 +7,8 @@ pipeline {
   stages {
     stage("build") {
       when {
-        expressions {
-          env.BRANCH_NAME == 'dev' && CODE_CHANGES == true
+        expression {
+          BRANCH_NAME == 'dev' && CODE_CHANGES == true
         }
       }
       steps {
@@ -28,7 +28,7 @@ pipeline {
     }
     stage("test mixed up build with gradle") {
       when {
-        expressions {
+        expression {
           //env.BRANCH_NAME or
           env.BRANCH_NAME == 'feature' || BRANCH_NAME == 'master'
 
