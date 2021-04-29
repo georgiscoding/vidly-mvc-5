@@ -63,7 +63,7 @@ pipeline {
           // usernamepassword cause thats the type.. server-credentials is the ID
           usernamepassword(credentials: 'server-credentials', usernameVariable: USER, passwordVariable: PASSWORD)
         ]) {
-            sh "some script ${USER} ${PASSWORD}"
+            echo "some script ${USER} ${PASSWORD}"
         }
       }
     }
