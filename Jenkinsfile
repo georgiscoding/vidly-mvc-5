@@ -1,4 +1,5 @@
 CODE_CHANGES = true
+def gv
 pipeline {
  agent any
 
@@ -20,6 +21,15 @@ pipeline {
 //   gradle 'Gradle'
 //  }
   stages {
+
+    stage("init") {
+      steps {
+        script {
+          gv = load "script.groovy"
+        }
+      }
+    }
+
     stage("build") {
       when {
         expression {
@@ -27,6 +37,10 @@ pipeline {
         }
       }
       steps {
+        script {
+          gv.buildApp()
+        }
+
         echo 'Building application'
         // Need to use double quoutes since we are using a variable inside the string
         echo "Building version ${NEW_VERSION}"
@@ -55,6 +69,9 @@ pipeline {
         }
       }
       steps {
+        script {
+          gv.testApp()
+        }
         echo 'Testing the application'
         // Without wrapper since we included it in tools at the beginning.
         // echo 'Building with gradle'
@@ -66,16 +83,21 @@ pipeline {
 
     stage("deploy") {
       steps {
-        echo 'deploying the application...'
-        echo "Deploying using the credentials : ${SERVER_CREDENTIALS}"
-        // With wrapper it looks like this.
-        withCredentials([
-          // usernamepassword cause thats the type.. server-credentials is the ID
-          usernamePassword(credentialsId: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
-        ]) {
-            echo "some script ${USER} ${PWD}"
+        script {
+          gv.deployApp()
         }
-        echo "Deploying the version: ${params.VERSION}"
+        //echo 'deploying the application...'
+        //echo "Deploying using the credentials : ${SERVER_CREDENTIALS}"
+
+        // With wrapper it looks like this.
+        // usernamepassword cause thats the type.. server-credentials is the ID
+
+        // withCredentials([
+        //   usernamePassword(credentialsId: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
+        // ]) {
+        //     echo "some script ${USER} ${PWD}"
+        // }
+        // echo "Deploying the version: ${params.VERSION}"
       }
     }
 
