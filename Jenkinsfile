@@ -1,9 +1,22 @@
+CODE_CHANGES = true
 pipeline {
  agent any
  tools {
   gradle 'Gradle'
  }
   stages {
+    stage("build") {
+      when {
+        expressions {
+          BRANCH_NAME == 'dev' && CODE_CHANGES == true
+        }
+      }
+      steps {
+        echo 'Building application'
+      }
+    }
+
+
     stage("run frontend") {
       steps {
         echo 'Building with yarn'
@@ -13,12 +26,20 @@ pipeline {
         }
       }
     }
-    stage("run backend") {
+    stage("test mixed up build with gradle") {
+      when {
+        expressions {
+          //env.BRANCH_NAME or
+          BRANCH_NAME == 'feature' || BRANCH_NAME == 'master'
+
+        }
+      }
       steps {
-        echo 'Building with gradle'
-        sh 'ls'
-        sh 'pwd'
-        sh './gradlew -v' 
+        echo 'Testing the application'
+        // echo 'Building with gradle'
+        // sh 'ls'
+        // sh 'pwd'
+        // sh './gradlew -v' 
       }
     }
   }
