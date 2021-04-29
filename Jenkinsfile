@@ -22,4 +22,15 @@ pipeline {
       }
     }
   }
+  post {
+    always {
+      sh 'pwd'
+    }
+    success {
+      sh 'ls'
+    }
+    failure {
+      sh 'pwd'
+    }
+  }
 }
