@@ -8,6 +8,14 @@ pipeline {
    SERVER_CREDENTIALS = credentials('server-credentials')
  }
 
+  // May be some external config you want to provide to your build. May be build you want to deploy to 
+  // staging server and you want to be able to choose a VERSION you want o deploy
+ parameters {
+   //string(name: 'VERSION', defaultValue: '', description: 'Version to deploy on staging server')
+   booleanParam(name: 'executeTests', defaultValue: true, description: 'Version to deploy on staging server')
+   choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: 'Version to deploy on staging server')
+ }
+
 //  tools {
 //   gradle 'Gradle'
 //  }
@@ -41,6 +49,8 @@ pipeline {
         expression {
           //env.BRANCH_NAME or
           env.BRANCH_NAME == 'feature' || BRANCH_NAME == 'master'
+          //params.executeTests == true
+          params.executeTests
 
         }
       }
@@ -61,10 +71,11 @@ pipeline {
         // With wrapper it looks like this.
         withCredentials([
           // usernamepassword cause thats the type.. server-credentials is the ID
-          usernamePassword(credentialsId: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')
+          usernamePassword(credentialsId: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
         ]) {
-            echo "some script ${USER} ${PASSWORD}"
+            echo "some script ${USER} ${PWD}"
         }
+        echo "Deploying the version: ${params.VERSION}"
       }
     }
 
