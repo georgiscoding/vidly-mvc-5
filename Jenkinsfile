@@ -61,7 +61,7 @@ pipeline {
         // With wrapper it looks like this.
         withCredentials([
           // usernamepassword cause thats the type.. server-credentials is the ID
-          usernamepassword(credentials: 'server-credentials', usernameVariable: USER, passwordVariable: PASSWORD)
+          usernamepassword(credentials: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')
         ]) {
             echo "some script ${USER} ${PASSWORD}"
         }
